@@ -1,0 +1,98 @@
+#main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.main-cont {
+    text-align: center;
+    color: black;
+    border-radius: 6px;
+    padding: 1em 1em 1em;
+    margin-bottom: 3rem;
+    font-weight: 200;
+    font-size: 120%;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.buttons button {
+    margin-top: 32px;
+    background-color: #A7E9AF;
+    width: 20ch;
+    max-width: 40%;
+    border-radius: 10px;
+    border: 1px solid #75B79E;
+    height: 50px;
+}
+
+.controls {
+    margin-top: 30px;
+    display: grid;
+    width: 80%;
+    max-width: 450px;
+    grid-auto-rows: 30px;
+    grid-template-columns: 2fr 1fr 2fr;
+    grid-template-areas:
+        "player1 tie player2"
+        "P1score tieScore P2ccore";
+    gap: 10px;
+    justify-items: center;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.playerone {
+    grid-area: player1;
+}
+.tie {
+    grid-area: tie;
+}
+.playertwo {
+    grid-area: player2;
+}
+.playerOneScore {
+    grid-area: P1score;
+}
+.tieScore {
+    grid-area: tieScore;
+}
+.playerTwoScore {
+    grid-area: P2ccore;
+}
+
+.winner {
+    width: 80%;
+    max-width: 400px;
+    height: 50px;
+    max-height: 50px;
+    margin: 20px 0 0 0;
+    background-color: #A7E9AF;
+    color: #000;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 30px;
+    line-height: 50px;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width: 380px) {
+
+    .playerUI p {
+    font-size: 1em;
+    }
+}

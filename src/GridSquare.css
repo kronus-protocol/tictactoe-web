@@ -1,0 +1,33 @@
+.square {
+    background-color: #A7E9AF;
+    border: 1px solid #6A8CAF;
+    text-align: center;
+    width: 100%;
+    font-size: 2.5em;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .square span {
+    opacity: 0;
+    transition: opacity 1s;
+  }
+
+  .square.x span, .square.o span {
+    position: absolute;
+    font-size: 70px;
+    font-weight: 800;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+
+  .square.x span {
+    color:#F10086;
+  }
+
+  .square.o span {
+    color:#4E9F3D;
+  }

@@ -1,0 +1,39 @@
+.howtoplay {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 100%;
+    max-width: 600px;
+    height: 100vh;
+    background-color: #75B79E;
+}
+
+.title {
+    position: relative;
+}
+.title button{
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 30px;
+    font-weight: 600;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #EEF9BF;
+}
+
+.howtoplay p {
+    padding: 1em 2em;
+    text-align: left;
+}
+
+@media (orientation: landscape) {
+    .howtoplay p {
+        padding: 0.25em 2em;
+    }
+    
+}
