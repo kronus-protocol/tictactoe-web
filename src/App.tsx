@@ -13,6 +13,8 @@ import React, {FC, ReactNode, useMemo, useState} from 'react';
 import Game from "./Game";
 import CreateGame from "./CreateGame";
 import {MirageProvider} from "./MirageProvider";
+import {WsSubscriptionProvider} from "./WsSubscriptionProvider";
+import Events from "./Events";
 
 export const App: FC = () => {
     return (
@@ -53,13 +55,16 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} autoConnect>
                 <MirageProvider>
+                    <WsSubscriptionProvider>
                     <div id="main">
                     <div style={{margin: '50px'}}>
                     <WalletModalProvider>{children}</WalletModalProvider>
                     </div>
                     {gameId && <Game gameId={gameId} />}
                     {!gameId && <CreateGame initGame={initGame} />}
+                    <Events />
                     </div>
+                    </WsSubscriptionProvider>
                 </MirageProvider>
             </WalletProvider>
         </ConnectionProvider>

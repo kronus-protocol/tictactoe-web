@@ -7,6 +7,7 @@ import * as anchor from "@project-serum/anchor";
 export class KronusLib {
     program: Program<Kronus>;
     connection: Connection;
+    provider: AnchorProvider;
 
     constructor(programId: PublicKey, connection: Connection, wallet: Wallet) {
         const provider = new AnchorProvider(connection, wallet, {
@@ -15,6 +16,7 @@ export class KronusLib {
 
         this.connection = connection;
         this.program = new Program(IDL, programId, provider);
+        this.provider = provider;
     }
 
     async getGamePdaAddress(uuid: String): Promise<PublicKey> {
@@ -59,7 +61,7 @@ export class KronusLib {
             throw Error('Game is not initialize');
         }
 
-        const currentBlockTime = await anchor.getProvider().connection.getBlockTime(await anchor.getProvider().connection.getSlot(undefined));
+        const currentBlockTime = await this.connection.getBlockTime(await this.connection.getSlot(undefined));
 
         const acceptGameTx = await this.program.methods.acceptGame(new anchor.BN(currentBlockTime as number))
             .accounts({
@@ -81,7 +83,7 @@ export class KronusLib {
             throw Error('Game is not initialize');
         }
 
-        const currentBlockTime = await anchor.getProvider().connection.getBlockTime(await anchor.getProvider().connection.getSlot(undefined));
+        const currentBlockTime = await this.connection.getBlockTime(await this.connection.getSlot(undefined));
 
         const makeMoveTx = await this.program.methods.makeMove(moveValue, new anchor.BN(currentBlockTime as number))
             .accounts({

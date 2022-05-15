@@ -5,7 +5,6 @@ import './Game.css';
 import useLocalStorage from './hooks/useLocalStorage';
 import Api from "./Api";
 import {useWallet} from "@solana/wallet-adapter-react";
-import {useMirage} from "./MirageProvider";
 
 interface Props {
     gameId: string;
@@ -16,17 +15,10 @@ const api = new Api();
 function Game({gameId}: Props) {
     const wallet = useWallet();
     const {publicKey} = wallet;
-    const mirage = useMirage();
 
     if (!publicKey) {
         return (<></>);
     }
-
-    const mockTransaction = async () => {
-        try {
-            await mirage?.buyToken('8ohg71HpVKkT9UjyLfoiYpPyJbdCBafdc5qoE1vgYxxK', 0);
-        } catch (e) {}
-    };
 
     // Set initial grid to be empty
     const initialGrid = Array(9).fill('');
@@ -77,32 +69,27 @@ function Game({gameId}: Props) {
     }, [gameId])
 
     const handleClick = (i: number) => {
-        mockTransaction().then(() => {
-            if (disable) return;
-            setDisable(true);
-            // using spread syntax to copy the current grid
-            const curGrid = [...grid];
-            // return if winner already determine or grid already has element
-            if (winner || curGrid[i]) {
-                setDisable(false);
-                return;
+        if (disable) return;
+        setDisable(true);
+        // using spread syntax to copy the current grid
+        const curGrid = [...grid];
+        // return if winner already determine or grid already has element
+        if (winner || curGrid[i]) {
+            setDisable(false);
+            return;
+        }
+
+        api.makeMove(gameId, publicKey.toString(), i).then((res) => {
+            // determine player
+            if (player === '1') {
+                curGrid[i] = 'o';
+                setGrid(curGrid);
+            } else if (player === '2') {
+                curGrid[i] = 'x';
+                setGrid(curGrid);
             }
 
-            // @ts-ignore
-            api.makeMove(gameId, publicKey.toString(), i).then((res) => {
-                // determine player
-                if (player === '1') {
-                    curGrid[i] = 'o';
-                    setGrid(curGrid);
-                } else if (player === '2') {
-                    curGrid[i] = 'x';
-                    setGrid(curGrid);
-                }
-
-                calculateWinner(curGrid);
-            });
-        }).catch((e) => {
-            console.log(e);
+            calculateWinner(curGrid);
         });
     };
 

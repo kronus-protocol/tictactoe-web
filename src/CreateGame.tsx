@@ -28,31 +28,63 @@ const CreateGame = ({initGame}: Props) => {
         return new KronusLib(programKey, connection, wallet as unknown as Wallet);
     }
 
-    const createGameCall = () => {
+    const initTransaction = async (gameId: string, publicKey: PublicKey, signerPubKey: PublicKey, publicKey2: PublicKey) => {
         const sdk = initKronusSdk();
 
+        const transaction = await sdk.initializeGame(gameId, publicKey, signerPubKey, publicKey2)
+
+        transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+        transaction.feePayer = publicKey;
+
+        // @ts-ignore
+        const signed = await wallet.signTransaction(transaction);
+        const tx = await connection.sendRawTransaction(signed!.serialize())
+
+        const txInfo = await connection.confirmTransaction(tx);
+        console.log("Signature: " + tx);
+        console.log(txInfo);
+    }
+
+    const joinTransaction = async (gameId: string, publicKey: PublicKey,signerPubKey: PublicKey) => {
+        const sdk = initKronusSdk();
+
+        const transaction = await sdk.acceptGame(gameId, publicKey, signerPubKey);
+
+        transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+        transaction.feePayer = publicKey;
+
+        // @ts-ignore
+        const signed = await wallet.signTransaction(transaction);
+        const tx = await connection.sendRawTransaction(signed!.serialize())
+
+        const txInfo = await connection.confirmTransaction(tx);
+        console.log("Signature: " + tx);
+        console.log(txInfo);
+    }
+
+    const createGameCall = () => {
         api.initGame(publicKey.toString(), inviteKey).then((res) => {
             const signerPubKey = res.data.pubkey0_signer;
             const gameId = res.data.game_id;
 
             return Promise.all([
-                sdk.initializeGame(gameId, publicKey, new PublicKey(signerPubKey), publicKey),
+                initTransaction(gameId, publicKey, new PublicKey(signerPubKey), new PublicKey(inviteKey)),
                 res.data.game_id
             ]);
         }).then(([_, gameId]) => {
-            setGameId(gameId);
+            console.log("HERE???")
+            console.log(gameId)
+            initGame(gameId);
         });
     }
 
     const joinGameCall = () => {
-        const sdk = initKronusSdk();
-
         api.joinGame(gameId, publicKey.toString()).then((res) => {
             const signerPubKey = res.data.pubkey1_signer;
             const gameId = res.data.game_id;
 
             return Promise.all([
-                sdk.acceptGame(gameId, publicKey, new PublicKey(signerPubKey)),
+                joinTransaction(gameId, publicKey, signerPubKey),
                 res.data.game_id
             ]);
         }).then(([_, gameId]) => {
