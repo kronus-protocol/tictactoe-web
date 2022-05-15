@@ -1,8 +1,8 @@
 import axios from "axios";
 
 class Api {
-    public async initGame(publicKey: string) {
-        return axios.post('https://tic-tac-toe-api.jozhe.com/init_game', {pubkey: publicKey});
+    public async initGame(publicKey: string, invitePublicKey: string) {
+        return axios.post('https://tic-tac-toe-api.jozhe.com/init_game', {pubkey: publicKey, invitepubkey: invitePublicKey});
     }
 
     public async joinGame(gameId: string, publicKey: string) {
